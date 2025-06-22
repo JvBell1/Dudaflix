@@ -1,4 +1,4 @@
-// src/index.js
+
 class App {
   constructor(root) {
     this.root = root;
@@ -6,10 +6,10 @@ class App {
       home: this.renderHome.bind(this),
       add: this.renderAddMovie.bind(this),
       list: this.renderList.bind(this),
-      filter: this.renderFilterMovies.bind(this), // Nova rota para o filtro
+      filter: this.renderFilterMovies.bind(this), 
     };
-    // this.movies = []; // Não precisamos mais armazenar filmes em memória no front-end
-    this.API_URL = 'http://localhost:3000/movies'; // URL base da sua API de back-end
+    
+    this.API_URL = 'http://localhost:3000/movies'; 
     this.init();
   }
 
@@ -47,19 +47,19 @@ class App {
     `;
     this.root.appendChild(container);
 
-    document.getElementById("movie-form").addEventListener("submit", async (e) => { // Adicionado 'async'
+    document.getElementById("movie-form").addEventListener("submit", async (e) => { 
       e.preventDefault();
       const name = document.getElementById("name").value;
       const genre = document.getElementById("genre").value;
-      const recommendation = document.getElementById("recommendation").value; // Agora é a avaliação
+      const recommendation = document.getElementById("recommendation").value; 
 
       try {
-        const response = await fetch(this.API_URL, { // Requisição POST para adicionar filme
+        const response = await fetch(this.API_URL, { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name, genre, recommendation }), // Envia os dados como JSON
+          body: JSON.stringify({ name, genre, recommendation }), 
         });
 
         if (!response.ok) {
@@ -68,7 +68,7 @@ class App {
 
         const newMovie = await response.json();
         console.log('Filme adicionado:', newMovie);
-        location.hash = "list"; // Redireciona para a lista após adicionar
+        location.hash = "list"; 
       } catch (error) {
         console.error("Erro ao adicionar filme:", error);
         alert("Erro ao adicionar filme. Verifique o console para mais detalhes.");
@@ -76,7 +76,7 @@ class App {
     });
   }
 
-  async renderList() { // Adicionado 'async'
+  async renderList() { 
     this.root.innerHTML = "";
     const container = document.createElement("div");
     container.innerHTML = `
@@ -85,30 +85,30 @@ class App {
       <div id="movie-cards"></div>
     `;
     this.root.appendChild(container);
-    await this.updateList(); // Espera a atualização da lista
+    await this.updateList(); 
   }
 
-  async updateList() { // Adicionado 'async'
+  async updateList() { 
     const listContainer = document.getElementById("movie-cards");
     if (!listContainer) return;
 
-    listContainer.innerHTML = "Carregando filmes..."; // Mensagem de carregamento
+    listContainer.innerHTML = "Carregando filmes..."; 
 
     try {
-      const response = await fetch(this.API_URL); // Requisição GET para listar todos os filmes
+      const response = await fetch(this.API_URL); 
       if (!response.ok) {
         throw new Error('Erro ao carregar filmes');
       }
-      const movies = await response.json(); // Recebe a lista de filmes do back-end
+      const movies = await response.json(); 
 
-      listContainer.innerHTML = ""; // Limpa a mensagem de carregamento
+      listContainer.innerHTML = ""; 
       if (movies.length === 0) {
         listContainer.innerHTML = "<p>Nenhum filme cadastrado ainda.</p>";
       } else {
         movies.forEach((movie) => {
           const card = document.createElement("div");
           card.className = "card";
-          // Usamos movie.rating pois o back-end está salvando como 'rating'
+          
           card.innerHTML = `
             <strong>${movie.name} (${movie.genre})</strong>
             <p>Avaliação: ${movie.rating}/5</p>
@@ -122,13 +122,13 @@ class App {
     }
   }
 
-  async removeMovie(id) { // Adicionado 'async' e recebe o id
+  async removeMovie(id) { 
     if (!confirm('Tem certeza que deseja remover este filme?')) {
       return;
     }
 
     try {
-      const response = await fetch(`${this.API_URL}/${id}`, { // Requisição DELETE para remover filme
+      const response = await fetch(`${this.API_URL}/${id}`, { 
         method: 'DELETE',
       });
 
@@ -137,7 +137,7 @@ class App {
       }
 
       console.log('Filme removido com sucesso!');
-      await this.updateList(); // Atualiza a lista após remover
+      await this.updateList(); 
     } catch (error) {
       console.error("Erro ao remover filme:", error);
       alert("Erro ao remover filme. Verifique o console para mais detalhes.");
@@ -180,7 +180,7 @@ class App {
     filterTypeSelect.addEventListener("change", () => {
       genreFilterField.style.display = "none";
       ratingFilterField.style.display = "none";
-      filteredMovieCards.innerHTML = ""; // Limpa resultados anteriores
+      filteredMovieCards.innerHTML = ""; 
 
       if (filterTypeSelect.value === "genre") {
         genreFilterField.style.display = "block";
@@ -242,7 +242,7 @@ class App {
     });
   }
 
-  // Você pode manter este, ou remover se não for usar.
+
   renderNotFound() {
     const container = document.createElement("div");
     container.innerHTML = `
